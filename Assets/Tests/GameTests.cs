@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
+using TMPro;
 
 public class GameTests
 {
@@ -27,5 +28,51 @@ public class GameTests
         // THEN
         Assert.That(scene.name, Is.EqualTo("Pong"));
         yield break;
+    }
+
+    [UnityTest]
+    public IEnumerator BallExists()
+    {
+        // GIVEN
+        BallController ball = Object.FindFirstObjectByType<BallController>();
+
+        // WHEN
+        // loaded
+
+        // THEN
+        Assert.That(ball, Is.Not.Null);
+        yield break;
+    }
+
+    [UnityTest]
+    public IEnumerator BallMoves()
+    {
+        // GIVEN
+        BallController ball = Object.FindFirstObjectByType<BallController>();
+        Vector2 originalPosition = ball.transform.position;
+
+        // WHEN
+        yield return new WaitForSeconds(.5f);
+
+        // THEN
+        Assert.That(ball.transform.position.x, Is.GreaterThan(originalPosition.x));
+        Assert.That(ball.transform.position.y, Is.GreaterThan(originalPosition.y));
+    }
+
+    [UnityTest]
+    public IEnumerator BallScores()
+    {
+        // GIVEN
+        BallController ball = Object.FindFirstObjectByType<BallController>();
+        ball.transform.position = new Vector2(8, 3);
+        TextMeshProUGUI score = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
+        string originalScore = score.text;
+
+        // WHEN
+        yield return new WaitForSeconds(.5f);
+
+        // THEN
+        Assert.That(originalScore, Is.EqualTo("0"));
+        Assert.That(score.text, Is.EqualTo("1"));
     }
 }
