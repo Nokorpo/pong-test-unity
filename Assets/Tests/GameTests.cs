@@ -5,6 +5,7 @@ using UnityEngine.TestTools;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
 using TMPro;
+using UnityEngine.Events;
 
 public class GameTests
 {
@@ -74,5 +75,34 @@ public class GameTests
         // THEN
         Assert.That(originalScore, Is.EqualTo("0"));
         Assert.That(score.text, Is.EqualTo("1"));
+    }
+
+    [UnityTest]
+    [Timeout(1000)] /* milliseconds */
+    public IEnumerator BallScoresWithEvent()
+    {
+        // GIVEN
+        BallController ball = Object.FindFirstObjectByType<BallController>();
+        ball.transform.position = new Vector2(8, 3);
+        TextMeshProUGUI score = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
+        string originalScore = score.text;
+
+        // WHEN
+        GoalController goal = GameObject.Find("Goal2").GetComponent<GoalController>();
+        yield return WaitUntilEventIsInvoked(goal.goalScored);
+
+        // THEN
+        Assert.That(originalScore, Is.EqualTo("0"));
+        Assert.That(score.text, Is.EqualTo("1"));
+
+        yield break;
+    }
+    private WaitUntil WaitUntilEventIsInvoked(UnityEvent unityEvent)
+    {
+        bool eventInvoked = false;
+        unityEvent.AddListener(() => eventInvoked = true);
+        //while (!eventInvoked)
+        //    yield return null;
+        return new WaitUntil(() => eventInvoked);
     }
 }

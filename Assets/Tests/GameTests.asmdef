@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Ball",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Goal"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
