@@ -1,8 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GoalController : MonoBehaviour
 {
+
+    public UnityEvent goalScored;
 
     public TextMeshProUGUI scoreLabel;
 
@@ -21,6 +24,7 @@ public class GoalController : MonoBehaviour
             scoreLabel.text = score.ToString();
             BallController ball = collision.GetComponent<BallController>();
             ball.Reset();
+            goalScored.Invoke();
         }
     }
 
